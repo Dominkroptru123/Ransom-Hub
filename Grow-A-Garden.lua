@@ -1,9 +1,10 @@
 local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local GameEvents = ReplicatedStorage:WaitForChild("GameEvents")
+local rs = game:GetService("ReplicatedStorage")
+local GameEvents = rs:WaitForChild("GameEvents")
 local BuySeedStock = GameEvents:WaitForChild("BuySeedStock")
 local BuyGearStock = GameEvents:WaitForChild("BuyGearStock")
 local SellInventory = GameEvents:WaitForChild("Sell_Inventory")
+local backpack = game.Players.LocalPlayer.Backpack
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
@@ -23,7 +24,15 @@ local Tabs = {
 local sell = Vector3.new(86.584465, 2.99999976, 0.426784337)
 local selectedSeeds = {}
 local selectedGears = {}
-
+local function itemcnt()
+    local cnt = 0
+    for _, item in ipairs(backpack:GetChildren()) do
+        if item:IsA("Tool") then
+            cnt += 1
+        end
+    end
+    return cnt
+end
 Tabs.Main:AddButton({
     Title = "Sell Inventory",
     Description = "Just sell your inventory",
@@ -71,6 +80,34 @@ GearsList:OnChanged(function(selected)
     end
 end)
 
+local AutoSellFruits = Tabs.Main:AddToggle("AutoSellFruits", { Title = "Auto Sell Fruits", Default = false })
+
+local fruitlimit = Tabs.Main:AddSlider("fruitlimit", {
+    Title = "Fruit Limit",
+    Description = "This is a slider",
+    Default = 200,
+    Min = 1,
+    Max = 200,
+    Rounding = 1,
+})
+
+
+
+task.spawn(function()
+    while true do
+        if AutoSellFruits.Value then
+            local val = tonumber(fruitlimit.Value)
+            if itemcnt() >= val then
+                local hrp = character:WaitForChild("HumanoidRootPart")
+                hrp.CFrame = CFrame.new(sell)
+                wait(0.2)
+                SellInventory:FireServer()
+            end
+        end
+        wait(0.1)
+    end
+end)
+
 task.spawn(function()
     while true do
         if AutoBuySeeds.Value then
@@ -78,7 +115,7 @@ task.spawn(function()
                 BuySeedStock:FireServer(seed)
             end
         end
-        task.wait(0.02)
+        task.wait(0.05)
     end
 end)
 task.spawn(function()
@@ -88,6 +125,6 @@ task.spawn(function()
                 BuyGearStock:FireServer(gear)
             end
         end
-        task.wait(0.02)
+        task.wait(0.05)
     end
 end)
