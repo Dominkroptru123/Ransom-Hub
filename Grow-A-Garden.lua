@@ -18,7 +18,7 @@ local Window = Fluent:CreateWindow({
     MinimizeKey = Enum.KeyCode.K
 })
 local Tabs = {
-    Main = Window:AddTab({ Title = "Main", Icon = "settings" }),
+    Main = Window:AddTab({ Title = "Tab Farm", Icon = "settings" }),
 }
 
 local sell = Vector3.new(86.584465, 2.99999976, 0.426784337)
