@@ -9,8 +9,9 @@ local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
-local pname = player.Name 
+local pname = player.Name
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+--variables
 local Window = Fluent:CreateWindow({
     Title = "Ransom Hub " .. Fluent.Version,
     SubTitle = "by g.rav3",
@@ -23,7 +24,14 @@ local Window = Fluent:CreateWindow({
 local Tabs = {
     Main = Window:AddTab({ Title = "Tab Farm", Icon = "settings" }),
 }
-
+--Tabs, Windows
+local infjump = true
+game:GetService("UserInputService").JumpRequest:connect(function()
+	if infjump then
+		game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+	end
+end)
+--Inf Jump
 local farm = nil
 for _, v in game.Workspace.Farm:GetChildren() do
     local v2 = v:FindFirstChild("Important")
@@ -35,6 +43,7 @@ for _, v in game.Workspace.Farm:GetChildren() do
         end
     end
 end
+--Get plr farm
 local plant = farm.Parent.Plants_Physical
 local sell = Vector3.new(86.584465, 2.99999976, 0.426784337)
 local selectedSeeds = {}
@@ -48,6 +57,7 @@ local function itemcnt()
     end
     return cnt
 end
+--count the items in backpack
 Tabs.Main:AddButton({
     Title = "Sell Inventory",
     Description = "Just sell your inventory",
@@ -58,6 +68,8 @@ Tabs.Main:AddButton({
         SellInventory:FireServer()
     end
 })
+--sell inventory
+local AutoHarvest = Tabs.Main:AddToggle("AutoHarvest", { Title = "Auto Harvest", Default = false })
 
 local AutoBuySeeds = Tabs.Main:AddToggle("AutoBuySeeds", { Title = "Auto Buy Seeds", Default = false })
 local SeedsList = Tabs.Main:AddDropdown("SeedsList", {
@@ -76,7 +88,7 @@ SeedsList:OnChanged(function(selected)
         end
     end
 end)
-
+--auto buy seeds
 local AutoBuyGears = Tabs.Main:AddToggle("AutoBuyGears", { Title = "Auto Buy Gears", Default = false })
 local GearsList = Tabs.Main:AddDropdown("GearsList", {
     Title = "Gears List",
@@ -94,7 +106,7 @@ GearsList:OnChanged(function(selected)
         end
     end
 end)
-
+--auto buy gears
 local AutoSellFruits = Tabs.Main:AddToggle("AutoSellFruits", { Title = "Auto Sell Fruits", Default = false })
 
 local fruitlimit = Tabs.Main:AddSlider("fruitlimit", {
@@ -105,8 +117,7 @@ local fruitlimit = Tabs.Main:AddSlider("fruitlimit", {
     Max = 200,
     Rounding = 1,
 })
-
-local AutoHarvest = Tabs.Main:AddToggle("AutoHarvest", { Title = "Auto Harvest", Default = false })
+--auto sell fruit
 
 task.spawn(function()
     while true do
@@ -143,7 +154,7 @@ task.spawn(function()
                 BuySeedStock:FireServer(seed)
             end
         end
-        task.wait(0.05)
+        task.wait(0.1)
     end
 end)
 task.spawn(function()
@@ -153,6 +164,6 @@ task.spawn(function()
                 BuyGearStock:FireServer(gear)
             end
         end
-        task.wait(0.05)
+        task.wait(0.1)
     end
 end)
