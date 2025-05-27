@@ -130,7 +130,7 @@ task.spawn(function()
                             }
                         }
                     game:GetService("ReplicatedStorage"):WaitForChild("ByteNetReliable"):FireServer(unpack(args))
-                    task.wait(0.4)
+                    task.wait(0.1)
                 end
             end
         end
