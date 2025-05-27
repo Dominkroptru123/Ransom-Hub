@@ -7,6 +7,9 @@ local SellInventory = GameEvents:WaitForChild("Sell_Inventory")
 local backpack = game.Players.LocalPlayer.Backpack
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local pname = player.Name 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local Window = Fluent:CreateWindow({
     Title = "Ransom Hub " .. Fluent.Version,
@@ -21,6 +24,18 @@ local Tabs = {
     Main = Window:AddTab({ Title = "Tab Farm", Icon = "settings" }),
 }
 
+local farm = nil
+for _, v in game.Workspace.Farm:GetChildren() do
+    local v2 = v:FindFirstChild("Important")
+    if v2 then 
+        local v3 = v2:FindFirstChild("Data")
+        if v3 and v3.Owner.Value == pname then
+            farm = v3
+            break
+        end
+    end
+end
+local plant = farm.Parent.Plants_Physical
 local sell = Vector3.new(86.584465, 2.99999976, 0.426784337)
 local selectedSeeds = {}
 local selectedGears = {}
@@ -84,15 +99,29 @@ local AutoSellFruits = Tabs.Main:AddToggle("AutoSellFruits", { Title = "Auto Sel
 
 local fruitlimit = Tabs.Main:AddSlider("fruitlimit", {
     Title = "Fruit Limit",
-    Description = "This is a slider",
+    Description = "Slide to choose the limit.",
     Default = 200,
     Min = 1,
     Max = 200,
     Rounding = 1,
 })
 
+local AutoHarvest = Tabs.Main:AddToggle("AutoHarvest", { Title = "Auto Harvest", Default = false })
 
-
+task.spawn(function()
+    while true do
+        for _ ,v in plant:GetChildren() do
+            for _ ,i in v.Fruits:GetChildren() do
+                if AutoHarvest.Value then
+                    local hrp = character:WaitForChild("HumanoidRootPart")
+                    hrp.CFrame = CFrame.new(i.PrimaryPart.Position)
+                    task.wait(0.4)
+                end
+            end
+        end
+        task.wait(0.1)
+    end
+end)
 task.spawn(function()
     while true do
         if AutoSellFruits.Value then
@@ -100,14 +129,13 @@ task.spawn(function()
             if itemcnt() >= val then
                 local hrp = character:WaitForChild("HumanoidRootPart")
                 hrp.CFrame = CFrame.new(sell)
-                wait(0.2)
+                wait(0.15)
                 SellInventory:FireServer()
             end
         end
         task.wait(0.1)
     end
 end)
-
 task.spawn(function()
     while true do
         if AutoBuySeeds.Value then
