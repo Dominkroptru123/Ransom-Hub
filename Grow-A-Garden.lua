@@ -3,7 +3,7 @@ local rs = game:GetService("ReplicatedStorage")
 local GameEvents = rs:WaitForChild("GameEvents")
 local BuySeedStock = GameEvents:WaitForChild("BuySeedStock")
 local BuyGearStock = GameEvents:WaitForChild("BuyGearStock")
-local SellInventory = GameEvents:WaitForChild("Sell_Inventory")
+local sellinventory = GameEvents:WaitForChild("Sell_Inventory")
 local backpack = game.Players.LocalPlayer.Backpack
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
@@ -65,7 +65,7 @@ Tabs.Main:AddButton({
         local hrp = character:WaitForChild("HumanoidRootPart")
         hrp.CFrame = CFrame.new(sell)
         wait(0.2)
-        SellInventory:FireServer()
+        sellinventory:FireServer()
     end
 })
 --sell inventory
@@ -118,14 +118,18 @@ local fruitlimit = Tabs.Main:AddSlider("fruitlimit", {
     Rounding = 1,
 })
 --auto sell fruit
-
 task.spawn(function()
     while true do
         for _ ,v in plant:GetChildren() do
             for _ ,i in v.Fruits:GetChildren() do
                 if AutoHarvest.Value then
-                    local hrp = character:WaitForChild("HumanoidRootPart")
-                    hrp.CFrame = CFrame.new(i.PrimaryPart.Position)
+                        local args = {
+                            buffer.fromstring("\001\001\000\001"),
+                            {
+                                i
+                            }
+                        }
+                    game:GetService("ReplicatedStorage"):WaitForChild("ByteNetReliable"):FireServer(unpack(args))
                     task.wait(0.4)
                 end
             end
@@ -141,7 +145,7 @@ task.spawn(function()
                 local hrp = character:WaitForChild("HumanoidRootPart")
                 hrp.CFrame = CFrame.new(sell)
                 wait(0.15)
-                SellInventory:FireServer()
+                sellinventory:FireServer()
             end
         end
         task.wait(0.1)
