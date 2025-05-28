@@ -34,7 +34,7 @@ local Window = Fluent:CreateWindow({
     MinimizeKey = Enum.KeyCode.LeftControl
 })
 local Tabs = {
-    Main = Window:AddTab({ Title = "Tab Farm", Icon = "settings" }),
+    Main = Window:AddTab({ Title = "Tab Farm", Icon = "carrot" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
 --Tabs, Windows
