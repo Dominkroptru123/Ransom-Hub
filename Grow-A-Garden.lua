@@ -11,7 +11,17 @@ local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local pname = player.Name
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local onetimefruits = {"Carrot", "Daffodil", "Orange Tulip", "Watermelon", "Pumpkin", "Bamboo", "Mushroom"}
 --variables
+local function checks(a, b)
+    for _, v in ipairs(b) do
+        if v == a then
+            return true
+        end
+    end
+    return false
+end
+--check function
 local Window = Fluent:CreateWindow({
     Title = "Ransom Hub " .. Fluent.Version,
     SubTitle = "by g.rav3",
@@ -43,8 +53,8 @@ for _, v in game.Workspace.Farm:GetChildren() do
         end
     end
 end
---Get plr farm
 local plant = farm.Parent.Plants_Physical
+--Get plr farm
 local sell = Vector3.new(86.584465, 2.99999976, 0.426784337)
 local selectedSeeds = {}
 local selectedGears = {}
@@ -69,13 +79,13 @@ Tabs.Main:AddButton({
     end
 })
 --sell inventory
-local AutoHarvest = Tabs.Main:AddToggle("AutoHarvest", { Title = "Auto Harvest", Default = false })
+local AutoHarvest = Tabs.Main:AddToggle("AutoHarvest", { Title = "Auto Collect", Default = false })
 
 local AutoBuySeeds = Tabs.Main:AddToggle("AutoBuySeeds", { Title = "Auto Buy Seeds", Default = false })
 local SeedsList = Tabs.Main:AddDropdown("SeedsList", {
     Title = "Seeds List",
     Description = "Select seeds.",
-    Values = {"Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato", "Corn","Daffoli", "Watermelon", "Pumpkin", "Apple", "Bamboo", "Coconut","Cactus", "Dragon Fruit", "Mango", "Grape", "Mushroom", "Pepper","Cacao", "Beanstalk"},
+    Values = {"Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato", "Corn","Daffodil", "Watermelon", "Pumpkin", "Apple", "Bamboo", "Coconut","Cactus", "Dragon Fruit", "Mango", "Grape", "Mushroom", "Pepper","Cacao", "Beanstalk"},
     Multi = true,
     Default = {},
 })
@@ -121,15 +131,15 @@ local fruitlimit = Tabs.Main:AddSlider("fruitlimit", {
 task.spawn(function()
     while true do
         for _ ,v in plant:GetChildren() do
-            for _ ,i in v.Fruits:GetChildren() do
+            if checks(v.Name,onetimefruits) then
                 if AutoHarvest.Value then
-                        local args = {
-                            buffer.fromstring("\001\001\000\001"),
-                            {
-                                i
-                            }
-                        }
-                    game:GetService("ReplicatedStorage"):WaitForChild("ByteNetReliable"):FireServer(unpack(args))
+                    game.ReplicatedStorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ v })
+                end
+            else
+                for _, i in v.Fruits:GetChildren() do
+                    if AutoHarvest.Value then
+                        game.ReplicatedStorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ i })
+                    end
                     task.wait(0.1)
                 end
             end
