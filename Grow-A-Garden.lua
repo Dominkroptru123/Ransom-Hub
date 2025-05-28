@@ -10,8 +10,12 @@ local character = player.Character or player.CharacterAdded:Wait()
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local pname = player.Name
+local hrppos = character:WaitForChild("HumanoidRootPart").Position
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 local onetimefruits = {"Carrot", "Daffodil", "Orange Tulip", "Watermelon", "Pumpkin", "Bamboo", "Mushroom"}
+local fruitlist = {"Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato", "Corn","Daffodil", "Watermelon", "Pumpkin", "Apple", "Bamboo", "Coconut","Cactus", "Dragon Fruit", "Mango", "Grape", "Mushroom", "Pepper","Cacao", "Beanstalk"}
 --variables
 local function checks(a, b)
     for _, v in ipairs(b) do
@@ -24,15 +28,16 @@ end
 --check function
 local Window = Fluent:CreateWindow({
     Title = "Ransom Hub " .. Fluent.Version,
-    SubTitle = "by g.rav3",
+    SubTitle = "by 51 aka fiftyone",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,
     Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.K
+    MinimizeKey = Enum.KeyCode.LeftControl
 })
 local Tabs = {
     Main = Window:AddTab({ Title = "Tab Farm", Icon = "settings" }),
+    Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
 --Tabs, Windows
 local infjump = true
@@ -73,9 +78,12 @@ Tabs.Main:AddButton({
     Description = "Just sell your inventory",
     Callback = function()
         local hrp = character:WaitForChild("HumanoidRootPart")
+        local hrppos1 = hrp.Position
         hrp.CFrame = CFrame.new(sell)
-        wait(0.2)
+        wait(0.15)
         sellinventory:FireServer()
+        wait(0.15)
+        hrp.CFrame = CFrame.new(hrppos1)
     end
 })
 --sell inventory
@@ -121,13 +129,47 @@ local AutoSellFruits = Tabs.Main:AddToggle("AutoSellFruits", { Title = "Auto Sel
 
 local fruitlimit = Tabs.Main:AddSlider("fruitlimit", {
     Title = "Fruit Limit",
-    Description = "Slide to choose the limit.",
+    Description = "Slide to choose the limit",
     Default = 200,
     Min = 1,
     Max = 200,
     Rounding = 1,
 })
 --auto sell fruit
+local AutoPlant = Tabs.Main:AddToggle("AutoPlant", { Title = "Auto Plant", Default = false })
+Tabs.Main:AddButton({
+    Title = "Set Plant Location",
+    Description = "Set yout plant location for auto plant",
+    Callback = function()
+        hrppos = character:WaitForChild("HumanoidRootPart").Position
+    end
+})
+--plan point
+task.spawn(function()
+    while true do
+        for _, v in backpack:GetChildren() do
+            if string.find(string.lower(v.Name), "seed") then
+                if v:IsA("Tool") and AutoPlant.Value then
+                    local c = true
+                    local sname = v.Name
+                    local start = string.find(string.lower(sname), "seed")
+                    local s = string.sub(sname, 1, start-2)
+                    v.Parent = character
+                    task.wait(0.4)
+                    if tonumber(string.match(sname, "%d+")) <= 1 then
+                        c = false
+                    end
+                    game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("Plant_RE"):FireServer(vector.create(hrppos.X, 0.13552704453468323, hrppos.Z),s)
+                    if c then
+                        task.wait(0.4)
+                        v.Parent = backpack
+                    end
+                end
+            end
+        end
+        task.wait(0.01)
+    end
+end)
 task.spawn(function()
     while true do
         for _ ,v in plant:GetChildren() do
@@ -140,11 +182,11 @@ task.spawn(function()
                     if AutoHarvest.Value then
                         game.ReplicatedStorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ i })
                     end
-                    task.wait(0.1)
+                    task.wait(0.01)
                 end
             end
         end
-        task.wait(0.1)
+        task.wait(0.01)
     end
 end)
 task.spawn(function()
@@ -153,9 +195,12 @@ task.spawn(function()
             local val = tonumber(fruitlimit.Value)
             if itemcnt() >= val then
                 local hrp = character:WaitForChild("HumanoidRootPart")
+                local hrppos1 = hrp.Position
                 hrp.CFrame = CFrame.new(sell)
                 wait(0.15)
                 sellinventory:FireServer()
+                wait(0.15)
+                hrp.CFrame = CFrame.new(hrppos1)
             end
         end
         task.wait(0.1)
@@ -181,3 +226,18 @@ task.spawn(function()
         task.wait(0.1)
     end
 end)
+SaveManager:SetLibrary(Fluent)
+InterfaceManager:SetLibrary(Fluent)
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({})
+InterfaceManager:SetFolder("RansomHub")
+SaveManager:SetFolder("RansomHub/Grow-A-Garden")
+InterfaceManager:BuildInterfaceSection(Tabs.Settings)
+SaveManager:BuildConfigSection(Tabs.Settings)
+Window:SelectTab(1)
+Fluent:Notify({
+    Title = "Ransom Hub",
+    Content = "The script for Grow A Garden has been loaded, thank you for using, much love from Vietnam.",
+    Duration = 6
+})
+SaveManager:LoadAutoloadConfig()
