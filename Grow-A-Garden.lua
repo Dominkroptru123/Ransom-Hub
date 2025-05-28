@@ -148,19 +148,12 @@ task.spawn(function()
         for _, v in backpack:GetChildren() do
             if string.find(string.lower(v.Name), "seed") then
                 if v:IsA("Tool") and AutoPlant.Value then
-                    local c = true
-                    local sname = v.Name
-                    local start = string.find(string.lower(sname), "seed")
-                    local s = string.sub(sname, 1, start-2)
                     v.Parent = character
-                    task.wait(0.4)
-                    if tonumber(string.match(sname, "%d+")) <= 1 then
-                        c = false
-                    end
-                    game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("Plant_RE"):FireServer(vector.create(hrppos.X, 0.13552704453468323, hrppos.Z),s)
-                    if c then
-                        task.wait(0.4)
-                        v.Parent = backpack
+                    for i = tonumber(string.match(v.Name, "%d+")), 1,-1 do
+                        local start = string.find(string.lower(v.Name), "seed")
+                        local s = string.sub(v.Name, 1, start-2)
+                        game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("Plant_RE"):FireServer(vector.create(hrppos.X, 0.13552704453468323, hrppos.Z),s)
+                        task.wait(0.25)
                     end
                 end
             end
@@ -180,7 +173,7 @@ task.spawn(function()
                     if AutoHarvest.Value then
                         game.ReplicatedStorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ i })
                     end
-                    task.wait(0.01)
+                    task.wait(0.04)
                 end
             end
         end
