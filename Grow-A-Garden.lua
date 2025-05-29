@@ -1,5 +1,4 @@
 local Players = game:GetService("Players")
-local rs = game:GetService("ReplicatedStorage")
 local GameEvents = rs:WaitForChild("GameEvents")
 local BuySeedStock = GameEvents:WaitForChild("BuySeedStock")
 local BuyGearStock = GameEvents:WaitForChild("BuyGearStock")
@@ -226,7 +225,7 @@ task.spawn(function()
                         local start = string.find(string.lower(v.Name), "seed")
                         local s = string.sub(v.Name, 1, start-2)
                         game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("Plant_RE"):FireServer(vector.create(hrppos.X, 0.13552704453468323, hrppos.Z),s)
-                        wait(0.25)
+                        wait(0.1)
                     end
 
 
@@ -247,12 +246,12 @@ task.spawn(function()
         for _ ,v in plant:GetChildren() do
             if checks(v.Name,onetimefruits) then
                 if AutoHarvest.Value then
-                    game.ReplicatedStorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ v })
+                    game:GetService("ReplicatedStorage"):WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ v })
                 end
             else
                 for _, i in v.Fruits:GetChildren() do
                     if AutoHarvest.Value then
-                        game.ReplicatedStorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ i })
+                        game:GetService("ReplicatedStorage"):WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ i })
                     end
                     task.wait(0.04)
                 end
