@@ -225,7 +225,7 @@ task.spawn(function()
                         local start = string.find(string.lower(v.Name), "seed")
                         local s = string.sub(v.Name, 1, start-2)
                         game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("Plant_RE"):FireServer(vector.create(hrppos.X, 0.13552704453468323, hrppos.Z),s)
-                        wait(0.1)
+                        task.wait(0.25)
                     end
 
 
