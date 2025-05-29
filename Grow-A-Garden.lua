@@ -1,5 +1,5 @@
 local Players = game:GetService("Players")
-local GameEvents = rs:WaitForChild("GameEvents")
+local GameEvents = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents")
 local BuySeedStock = GameEvents:WaitForChild("BuySeedStock")
 local BuyGearStock = GameEvents:WaitForChild("BuyGearStock")
 local sellinventory = GameEvents:WaitForChild("Sell_Inventory")
