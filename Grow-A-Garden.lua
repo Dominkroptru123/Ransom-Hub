@@ -50,6 +50,7 @@ local Window = Fluent:CreateWindow({
 })
 local Tabs = {
     Main = Window:AddTab({ Title = "Tab Farm", Icon = "settings" }),
+    Teleport = Window:AddTab({ Title = "Teleport", Icon = "settings" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
 --Tabs, Windows
@@ -74,6 +75,8 @@ end
 local plant = farm.Parent.Plants_Physical
 --Get plr farm
 local sell = Vector3.new(86.584465, 2.99999976, 0.426784337)
+local gear = Vector3.new(-285.88616943359375, 2.999999761581421, -33.095706939697266)
+local cosmetics = Vector3.new(-285.88616943359375, 2.999999761581421, -14.9064884)
 local selectedSeeds = {}
 local selectedGears = {}
 local function itemcnt()
@@ -93,9 +96,9 @@ Tabs.Main:AddButton({
         local hrp = character:WaitForChild("HumanoidRootPart")
         local hrppos1 = hrp.Position
         hrp.CFrame = CFrame.new(sell)
-        wait(0.15)
+        wait(0.2)
         sellinventory:FireServer()
-        wait(0.15)
+        wait(0.2)
         hrp.CFrame = CFrame.new(hrppos1)
     end
 })
@@ -158,6 +161,22 @@ Tabs.Main:AddButton({
     end
 })
 --plan point
+Tabs.Teleport:AddButton({
+    Title = "Teleport To Gear Shop",
+    Description = "Self-explain",
+    Callback = function()
+        local hrp = character:WaitForChild("HumanoidRootPart")
+        hrp.CFrame = CFrame.new(gear)
+    end
+})
+Tabs.Teleport:AddButton({
+    Title = "Teleport To Cosmetics Shop",
+    Description = "Self-explain",
+    Callback = function()
+        local hrp = character:WaitForChild("HumanoidRootPart")
+        hrp.CFrame = CFrame.new(cosmetics)
+    end
+})
 task.spawn(function()
     while true do
         for _, v in backpack:GetChildren() do
@@ -211,9 +230,9 @@ task.spawn(function()
                 local hrp = character:WaitForChild("HumanoidRootPart")
                 local hrppos1 = hrp.Position
                 hrp.CFrame = CFrame.new(sell)
-                wait(0.15)
+                wait(0.2)
                 sellinventory:FireServer()
-                wait(0.15)
+                wait(0.2)
                 hrp.CFrame = CFrame.new(hrppos1)
             end
         end
