@@ -79,6 +79,7 @@ local gear = Vector3.new(-285.88616943359375, 2.999999761581421, -33.09570693969
 local cosmetics = Vector3.new(-285.88616943359375, 2.999999761581421, -14.9064884)
 local selectedSeeds = {}
 local selectedGears = {}
+local selectedEggs = {}
 local function itemcnt()
     local cnt = 0
     for _, item in ipairs(backpack:GetChildren()) do
@@ -141,6 +142,24 @@ GearsList:OnChanged(function(selected)
     end
 end)
 --auto buy gears
+local AutoBuyEggs = Tabs.Main:AddToggle("AutoBuyEggs", { Title = "Auto Buy Eggs", Default = false })
+local EggsList = Tabs.Main:AddDropdown("EggsList", {
+    Title = "Eggs List",
+    Description = "Select eggs.",
+    Values = {"Common Egg","Uncommon Egg","Rare Egg","Legendary Egg","Mythical Egg","Bug Egg"},
+    Multi = true,
+    Default = {},
+})
+
+EggsList:OnChanged(function(selected)
+    table.clear(selectedEggs)
+    for egg, isSelected in pairs(selected) do
+        if isSelected then
+            table.insert(selectedEggs, egg)
+        end
+    end
+end)
+--auto buy eggs
 local AutoSellFruits = Tabs.Main:AddToggle("AutoSellFruits", { Title = "Auto Sell Fruits", Default = false })
 
 local fruitlimit = Tabs.Main:AddSlider("fruitlimit", {
@@ -177,6 +196,26 @@ Tabs.Teleport:AddButton({
         hrp.CFrame = CFrame.new(cosmetics)
     end
 })
+--teleport thingy
+task.spawn(function()
+    while true do
+        if AutoBuyEggs.Value then
+            local cnt = 1
+            for _, v in pairs(game.Workspace.NPCS:WaitForChild("Pet Stand").EggLocations:GetChildren()) do
+                if string.find(string.lower(v.Name), "egg") then
+                    print(cnt)
+                    print(v)
+                    if checks(v.Name,selectedEggs) then
+                        game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("BuyPetEgg"):FireServer(cnt)
+                        print(cnt)
+                    end
+                    cnt = cnt + 1
+                end
+            end
+        end
+        task.wait(0.2)
+    end
+end)
 task.spawn(function()
     while true do
         for _, v in backpack:GetChildren() do
