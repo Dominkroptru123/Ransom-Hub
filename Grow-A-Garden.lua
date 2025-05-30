@@ -1,8 +1,6 @@
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
-local discordInvite = "https://discord.gg/zY276Cj7tn"
-local clicked = false
 local replicatedstorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local GameEvents = replicatedstorage:WaitForChild("GameEvents")
@@ -19,28 +17,6 @@ local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/d
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 local onetimefruits = {"Carrot", "Daffodil", "Orange Tulip", "Watermelon", "Pumpkin", "Bamboo", "Mushroom"}
 local fruitlist = {"Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato", "Corn","Daffodil", "Watermelon", "Pumpkin", "Apple", "Bamboo", "Coconut","Cactus", "Dragon Fruit", "Mango", "Grape", "Mushroom", "Pepper","Cacao", "Beanstalk"}
--- discord
-local notification = Fluent:Notify({
-    Title = "Join discord for update",
-    Content = "Join discord server to support us.\nClick below to copy the link.",
-    Actions = {
-        Copy = {
-            Name = "Copy Discord Link",
-            Callback = function()
-                setclipboard(discordInvite)
-                Fluent:Notify({
-                    Title = "Copied!",
-                    Content = "Discord link copied to clipboard. Enjoy the script!",
-                    Duration = 4
-                })
-                clicked = true
-            end
-        }
-    },
-    Duration = math.huge
-})
-repeat task.wait() until clicked
-
 --variables
 local function checks(a, b)
     for _, v in ipairs(b) do
@@ -68,7 +44,7 @@ end
 --check function 2
 local Window = Fluent:CreateWindow({
     Title = "Ransom Hub " .. Fluent.Version,
-    SubTitle = "by 51 aka fiftyone and Dominkroptru123",
+    SubTitle = "by 51 aka fiftyone",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,
