@@ -52,6 +52,7 @@ local Window = Fluent:CreateWindow({
 })
 local Tabs = {
     Main = Window:AddTab({ Title = "Tab Farm", Icon = "settings" }),
+    DupeTab = Window:AddTab({ Title = "Dupe", Icon = "settings" }),
     Teleport = Window:AddTab({ Title = "Teleport", Icon = "settings" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
@@ -199,6 +200,35 @@ Tabs.Teleport:AddButton({
     end
 })
 --teleport thingy
+local AutoDupe = Tabs.DupeTab:AddToggle("AutoDupe", { Title = "Auto Dupe", Default = false })
+Tabs.DupeTab:AddParagraph({
+    Title = "How To Dupe",
+    Content = "Equip a pet on another account in the same server"
+})
+task.spawn(function()
+    local SellPetEvent = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("SellPet_RE")
+    while true do
+        for _, obj in ipairs(game.Workspace:GetChildren()) do
+            local plr = game.Players:GetPlayerFromCharacter(obj)
+            if plr then
+                for _, v in ipairs(obj:GetChildren()) do
+                    if v:IsA("Model") or v:IsA("Folder") or v:IsA("Part") then
+                        if string.find(string.lower(v.Name), "age") then
+                            while obj:FindFirstChild(v.Name) do
+                                if AutoDupe.Value then
+                                    SellPetEvent:FireServer(v);
+                                    task.wait(0.001)
+                                end
+                                task.wait(0.001)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        task.wait(0.01)
+    end
+end)
 task.spawn(function()
     while true do
         if AutoBuyEggs.Value then
