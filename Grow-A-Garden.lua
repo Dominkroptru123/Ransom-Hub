@@ -168,7 +168,7 @@ local fruitlimit = Tabs.Main:AddSlider("fruitlimit", {
     Title = "Fruit Limit",
     Description = "Slide to choose the limit",
     Default = 200,
-    Min = ,
+    Min = 3,
     Max = 200,
     Rounding = 1,
 })
@@ -207,7 +207,6 @@ task.spawn(function()
                 if string.find(string.lower(v.Name), "egg") then
                     if checks(v.Name,selectedEggs) then
                         game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("BuyPetEgg"):FireServer(cnt)
-                        print(cnt)
                     end
                     cnt = cnt + 1
                 end
