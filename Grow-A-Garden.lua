@@ -219,7 +219,7 @@ task.spawn(function()
                                     SellPetEvent:FireServer(v);
                                     task.wait(0.001)
                                 end
-                                task.wait(0.001)
+                                task.wait(0.01)
                             end
                         end
                     end
@@ -242,7 +242,7 @@ task.spawn(function()
                 end
             end
         end
-        task.wait(0.2)
+        task.wait(0.3)
     end
 end)
 task.spawn(function()
@@ -261,7 +261,7 @@ task.spawn(function()
                     end
                 end
             end
-            task.wait(0.01)
+            task.wait(0.1)
         end
     end)
 end)
@@ -278,7 +278,7 @@ task.spawn(function()
                     if AutoHarvest.Value then
                         game:GetService("ReplicatedStorage"):WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ i })
                     end
-                    task.wait(0.04)
+                    task.wait(0.01)
                 end
             end
         end
@@ -299,7 +299,7 @@ task.spawn(function()
                 hrp.CFrame = CFrame.new(hrppos1)
             end
         end
-        task.wait(0.1)
+        task.wait(0.25)
     end
 end)
 task.spawn(function()
@@ -309,7 +309,7 @@ task.spawn(function()
                 BuySeedStock:FireServer(seed)
             end
         end
-        task.wait(0.1)
+        task.wait(0.25)
     end
 end)
 task.spawn(function()
@@ -319,7 +319,7 @@ task.spawn(function()
                 BuyGearStock:FireServer(gear)
             end
         end
-        task.wait(0.1)
+        task.wait(0.25)
     end
 end)
 SaveManager:SetLibrary(Fluent)
