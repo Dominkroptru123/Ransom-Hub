@@ -168,7 +168,7 @@ local fruitlimit = Tabs.Main:AddSlider("fruitlimit", {
     Title = "Fruit Limit",
     Description = "Slide to choose the limit",
     Default = 200,
-    Min = 1,
+    Min = 3,
     Max = 200,
     Rounding = 1,
 })
