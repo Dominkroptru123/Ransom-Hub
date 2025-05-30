@@ -219,31 +219,26 @@ task.spawn(function()
     end
 end)
 task.spawn(function()
-    while true do
-        for _, v in backpack:GetChildren() do
-            if string.find(string.lower(v.Name), "seed") then
-                if v:IsA("Tool") and AutoPlant.Value then
-                    while checks2(v.Name) do
-                        v.Parent = character
-                        local start = string.find(string.lower(v.Name), "seed")
-                        local s = string.sub(v.Name, 1, start-2)
-                        game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("Plant_RE"):FireServer(vector.create(hrppos.X, 0.13552704453468323, hrppos.Z),s)
-                        task.wait(0.25)
+    pcall(function()
+        while true do
+            for _, v in backpack:GetChildren() do
+                if string.find(string.lower(v.Name), "seed") then
+                    if v:IsA("Tool") and AutoPlant.Value then
+                        while checks2(v.Name) do
+                            v.Parent = character
+                            local start = string.find(string.lower(v.Name), "seed")
+                            local s = string.sub(v.Name, 1, start - 2)
+                            game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("Plant_RE"):FireServer(vector.create(hrppos.X, 0.13552704453468323, hrppos.Z),s)
+                            task.wait(0.1)
+                        end
                     end
-
-
-                    -- v.Parent = character
-                    -- for i = tonumber(string.match(v.Name, "%d+")), 1,-1 do
-                    --     local start = string.find(string.lower(v.Name), "seed")
-                    --     local s = string.sub(v.Name, 1, start-2)
-                    --     game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("Plant_RE"):FireServer(vector.create(hrppos.X, 0.13552704453468323, hrppos.Z),s)
-                    --     task.wait(0.25)
                 end
             end
+            task.wait(0.01)
         end
-        task.wait(0.01)
-    end
+    end)
 end)
+
 task.spawn(function()
     while true do
         for _ ,v in plant:GetChildren() do
