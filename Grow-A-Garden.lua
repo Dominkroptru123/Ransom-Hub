@@ -1,8 +1,9 @@
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
+local replicatedstorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
-local GameEvents = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents")
+local GameEvents = replicatedstorage:WaitForChild("GameEvents")
 local BuySeedStock = GameEvents:WaitForChild("BuySeedStock")
 local BuyGearStock = GameEvents:WaitForChild("BuyGearStock")
 local sellinventory = GameEvents:WaitForChild("Sell_Inventory")
@@ -206,7 +207,7 @@ Tabs.DupeTab:AddParagraph({
     Content = "Equip a pet on another account in the same server"
 })
 task.spawn(function()
-    local SellPetEvent = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("SellPet_RE")
+    local SellPetEvent = replicatedstorage:WaitForChild("GameEvents"):WaitForChild("SellPet_RE")
     while true do
         for _, obj in ipairs(game.Workspace:GetChildren()) do
             local plr = game.Players:GetPlayerFromCharacter(obj)
@@ -236,7 +237,7 @@ task.spawn(function()
             for _, v in pairs(game.Workspace.NPCS:WaitForChild("Pet Stand").EggLocations:GetChildren()) do
                 if string.find(string.lower(v.Name), "egg") then
                     if checks(v.Name,selectedEggs) then
-                        game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("BuyPetEgg"):FireServer(cnt)
+                        replicatedstorage:WaitForChild("GameEvents"):WaitForChild("BuyPetEgg"):FireServer(cnt)
                     end
                     cnt = cnt + 1
                 end
@@ -255,7 +256,7 @@ task.spawn(function()
                             v.Parent = character
                             local start = string.find(string.lower(v.Name), "seed")
                             local s = string.sub(v.Name, 1, start - 2)
-                            game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("Plant_RE"):FireServer(vector.create(hrppos.X, 0.13552704453468323, hrppos.Z),s)
+                            replicatedstorage:WaitForChild("GameEvents"):WaitForChild("Plant_RE"):FireServer(vector.create(hrppos.X, 0.13552704453468323, hrppos.Z),s)
                             task.wait(0.1)
                         end
                     end
@@ -271,12 +272,12 @@ task.spawn(function()
         for _ ,v in plant:GetChildren() do
             if checks(v.Name,onetimefruits) then
                 if AutoHarvest.Value then
-                    game:GetService("ReplicatedStorage"):WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ v })
+                    replicatedstorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ v })
                 end
             else
                 for _, i in v.Fruits:GetChildren() do
                     if AutoHarvest.Value then
-                        game:GetService("ReplicatedStorage"):WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ i })
+                        replicatedstorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ i })
                     end
                     task.wait(0.01)
                 end
