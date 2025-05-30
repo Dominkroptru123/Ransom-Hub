@@ -168,7 +168,7 @@ local fruitlimit = Tabs.Main:AddSlider("fruitlimit", {
     Title = "Fruit Limit",
     Description = "Slide to choose the limit",
     Default = 200,
-    Min = 3,
+    Min = ,
     Max = 200,
     Rounding = 1,
 })
@@ -205,8 +205,6 @@ task.spawn(function()
             local cnt = 1
             for _, v in pairs(game.Workspace.NPCS:WaitForChild("Pet Stand").EggLocations:GetChildren()) do
                 if string.find(string.lower(v.Name), "egg") then
-                    print(cnt)
-                    print(v)
                     if checks(v.Name,selectedEggs) then
                         game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("BuyPetEgg"):FireServer(cnt)
                         print(cnt)
