@@ -44,7 +44,7 @@ end
 --check function 2
 local Window = Fluent:CreateWindow({
     Title = "Ransom Hub " .. Fluent.Version,
-    SubTitle = "by 51 aka fiftyone and Dominkroptru123",
+    SubTitle = "by 51 aka fiftyone",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,
@@ -279,7 +279,7 @@ task.spawn(function()
                     if AutoHarvest.Value then
                         replicatedstorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ i })
                     end
-                    task.wait(0.01)
+                    task.wait(0.04)
                 end
             end
         end
