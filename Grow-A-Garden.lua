@@ -44,7 +44,7 @@ end
 --check function 2
 local Window = Fluent:CreateWindow({
     Title = "Ransom Hub " .. Fluent.Version,
-    SubTitle = "by 51 aka fiftyone",
+    SubTitle = "by 51 aka fiftyone and Dominkroptru123",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,
