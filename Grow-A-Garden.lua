@@ -73,6 +73,12 @@ UserInputService.WindowFocusReleased:Connect(function()
    RunService.Stepped:Wait()
    pcall(firesignal, UserInputService.WindowFocused)
 end)
+local vu = game:GetService("VirtualUser")
+game:GetService("Players").LocalPlayer.Idled:Connect(function()
+    vu:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+    wait(1)
+    vu:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+end)
 --Anti-Afk
 local farm = nil
 for _, v in game.Workspace.Farm:GetChildren() do
