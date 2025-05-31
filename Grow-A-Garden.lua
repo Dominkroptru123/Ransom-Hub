@@ -52,12 +52,31 @@ local Window = Fluent:CreateWindow({
     MinimizeKey = Enum.KeyCode.LeftControl
 })
 local Tabs = {
-    Discord = Window:AddTab({ Title = "Introduction", Icon = "settings" }),
-    Main = Window:AddTab({ Title = "Tab Farm", Icon = "settings" }),
-    DupeTab = Window:AddTab({ Title = "Dupe", Icon = "settings" }),
-    Teleport = Window:AddTab({ Title = "Teleport", Icon = "settings" }),
-    Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
+    Info = Window:AddTab({Title = " Info ", Icon = ""}),
+    Main = Window:AddTab({ Title = "Tab Farm", Icon = "" }),
+    DupeTab = Window:AddTab({ Title = "Dupe", Icon = "" }),
+    Teleport = Window:AddTab({ Title = "Teleport", Icon = "" }),
+    Settings = Window:AddTab({ Title = "Settings", Icon = "" }),
+
 }
+
+Tabs.Info:AddParagraph({
+    Title = "Get fast update by join our server!",
+    Description = ""
+
+})
+Tabs.Info:AddButton({
+    Title = "Discord link",
+    Description = "Click to copy Discord link",
+    Callback = function()
+        setclipboard("https://discord.gg/zY276Cj7tn")
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "Discord Link",
+            Text = "https://discord.gg/zY276Cj7tn",
+            Duration = 5
+        })
+    end
+})
 --Tabs, Windows
 local infjump = true
 game:GetService("UserInputService").JumpRequest:connect(function()
@@ -79,7 +98,7 @@ Players.LocalPlayer.Idled:Connect(function()
     wait(1)
     vu:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
 end)
---Anti-Afk
+--antiafk
 local farm = nil
 for _, v in game.Workspace.Farm:GetChildren() do
     local v2 = v:FindFirstChild("Important")
@@ -109,19 +128,6 @@ local function itemcnt()
     return cnt
 end
 --count the items in backpack
-Tabs.Discord:AddButton({
-    Title = "Copy Discord Invite",
-    Description = "Support us by joining our Discord server",
-    Callback = function()
-        setclipboard("https://discord.gg/Efz62hHB")
-        Fluent:Notify({
-            Title = "Discord Invite Copied",
-            Content = "Paste in your browser",
-            Duration = 4
-        })
-    end
-})
---Copy Discord Invite
 Tabs.Main:AddButton({
     Title = "Sell Inventory",
     Description = "Just sell your inventory",
@@ -296,25 +302,23 @@ task.spawn(function()
 end)
 
 task.spawn(function()
-    pcall(function()
-        while true do
-            for _ ,v in plant:GetChildren() do
-                if checks(v.Name,onetimefruits) then
+    while true do
+        for _ ,v in plant:GetChildren() do
+            if checks(v.Name,onetimefruits) then
+                if AutoHarvest.Value then
+                    replicatedstorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ v })
+                end
+            else
+                for _, i in v.Fruits:GetChildren() do
                     if AutoHarvest.Value then
-                        replicatedstorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ v })
+                        replicatedstorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ i })
                     end
-                else
-                    for _, i in v.Fruits:GetChildren() do
-                        if AutoHarvest.Value then
-                            replicatedstorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ i })
-                        end
-                        task.wait(0.01)
-                    end
+                    task.wait(0.04)
                 end
             end
-            task.wait(0.01)
         end
-    end)
+        task.wait(0.01)
+    end
 end)
 task.spawn(function()
     while true do
