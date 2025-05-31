@@ -52,6 +52,7 @@ local Window = Fluent:CreateWindow({
     MinimizeKey = Enum.KeyCode.LeftControl
 })
 local Tabs = {
+    Discord = Window:AddTab({ Title = "Introduction", Icon = "settings" }),
     Main = Window:AddTab({ Title = "Tab Farm", Icon = "settings" }),
     DupeTab = Window:AddTab({ Title = "Dupe", Icon = "settings" }),
     Teleport = Window:AddTab({ Title = "Teleport", Icon = "settings" }),
@@ -94,6 +95,19 @@ local function itemcnt()
     return cnt
 end
 --count the items in backpack
+Tabs.Discord:AddButton({
+    Title = "Copy Discord Invite",
+    Description = "Support us by joining our Discord server",
+    Callback = function()
+        setclipboard("https://discord.gg/Efz62hHB")
+        Fluent:Notify({
+            Title = "Discord Invite Copied",
+            Content = "Paste in your browser",
+            Duration = 4
+        })
+    end
+})
+--Copy Discord Invite
 Tabs.Main:AddButton({
     Title = "Sell Inventory",
     Description = "Just sell your inventory",
