@@ -66,6 +66,14 @@ game:GetService("UserInputService").JumpRequest:connect(function()
 	end
 end)
 --Inf Jump
+assert(firesignal, "Your exploit does not support firesignal.")
+local UserInputService: UserInputService = game:GetService("UserInputService")
+local RunService: RunService = game:GetService("RunService")
+UserInputService.WindowFocusReleased:Connect(function()
+   RunService.Stepped:Wait()
+   pcall(firesignal, UserInputService.WindowFocused)
+end)
+--Anti-Afk
 local farm = nil
 for _, v in game.Workspace.Farm:GetChildren() do
     local v2 = v:FindFirstChild("Important")
