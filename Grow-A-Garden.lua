@@ -242,16 +242,17 @@ Tabs.DupeTab:AddParagraph({
 })
 task.spawn(function()
     local SellPetEvent = replicatedstorage:WaitForChild("GameEvents"):WaitForChild("SellPet_RE")
+    local localPlayer = game.Players.LocalPlayer
     while true do
         for _, obj in ipairs(game.Workspace:GetChildren()) do
             local plr = game.Players:GetPlayerFromCharacter(obj)
-            if plr then
+            if plr and plr ~= localPlayer then -- Only proceed if it's NOT the local player's character
                 for _, v in ipairs(obj:GetChildren()) do
                     if v:IsA("Model") or v:IsA("Folder") or v:IsA("Part") then
                         if string.find(string.lower(v.Name), "age") then
                             while obj:FindFirstChild(v.Name) do
                                 if AutoDupe.Value then
-                                    SellPetEvent:FireServer(v);
+                                    SellPetEvent:FireServer(v)
                                     task.wait(0.001)
                                 end
                                 task.wait(0.01)
@@ -264,6 +265,7 @@ task.spawn(function()
         task.wait(0.01)
     end
 end)
+
 task.spawn(function()
     while true do
         if AutoBuyEggs.Value then
