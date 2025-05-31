@@ -268,23 +268,25 @@ task.spawn(function()
 end)
 
 task.spawn(function()
-    while true do
-        for _ ,v in plant:GetChildren() do
-            if checks(v.Name,onetimefruits) then
-                if AutoHarvest.Value then
-                    replicatedstorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ v })
-                end
-            else
-                for _, i in v.Fruits:GetChildren() do
+    pcall(function()
+        while true do
+            for _ ,v in plant:GetChildren() do
+                if checks(v.Name,onetimefruits) then
                     if AutoHarvest.Value then
-                        replicatedstorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ i })
+                        replicatedstorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ v })
                     end
-                    task.wait(0.04)
+                else
+                    for _, i in v.Fruits:GetChildren() do
+                        if AutoHarvest.Value then
+                            replicatedstorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ i })
+                        end
+                        task.wait(0.01)
+                    end
                 end
             end
+            task.wait(0.01)
         end
-        task.wait(0.01)
-    end
+    end)
 end)
 task.spawn(function()
     while true do
