@@ -265,11 +265,12 @@ task.spawn(function()
                 end
             end
             if checkevent then
-                checkevent = false
+                print("lannayduocvevietnamchangdamquacampuchialanhai")
                 game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("HoneyMachineService_RE"):FireServer("MachineInteract")
+                checkevent = false
             end
         end
-        task.wait(2.5)
+        task.wait(0.05)
     end
 end)
 task.spawn(function()
@@ -352,11 +353,13 @@ task.spawn(function()
                     replicatedstorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ v })
                 end
             else
-                for _, i in v.Fruits:GetChildren() do
-                    if AutoHarvest.Value then
-                        replicatedstorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ i })
+                if v:FindFirstChild("Fruits") then 
+                    for _, i in v.Fruits:GetChildren() do
+                        if AutoHarvest.Value then
+                            replicatedstorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ i })
+                        end
+                        task.wait(0.01)
                     end
-                    task.wait(0.04)
                 end
             end
         end
@@ -379,6 +382,7 @@ task.spawn(function()
                     end
                     for _, v in backpack:GetChildren() do
                         local check2716 = false
+                        local check2717 = false
                         for _, i in ipairs(blacklisted) do
                             if string.find(string.lower(v.Name), string.lower(i)) then
                                 check2716 = true
@@ -387,7 +391,14 @@ task.spawn(function()
                         end
                         if not check2716 then
                             if string.find(v.Name,"kg") then
-                                v.Parent = character
+                                if AutoEvent.Value then
+                                    if string.find(string.lower(v.Name),"pollinated") then
+                                        check2717 = true
+                                    end
+                                end
+                                if not check2717 then
+                                    v.Parent = character
+                                end
                                 task.wait(0.001)
                             end
                         end
