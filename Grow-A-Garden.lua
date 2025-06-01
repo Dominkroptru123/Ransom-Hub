@@ -7,6 +7,7 @@ local GameEvents = replicatedstorage:WaitForChild("GameEvents")
 local BuySeedStock = GameEvents:WaitForChild("BuySeedStock")
 local BuyGearStock = GameEvents:WaitForChild("BuyGearStock")
 local sellinventory = GameEvents:WaitForChild("Sell_Inventory")
+local sellitem = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("Sell_Item")
 local backpack = game.Players.LocalPlayer.Backpack
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
@@ -117,6 +118,7 @@ local gear = Vector3.new(-285.88616943359375, 2.999999761581421, -33.09570693969
 local cosmetics = Vector3.new(-285.88616943359375, 2.999999761581421, -14.9064884)
 local selectedSeeds = {}
 local selectedGears = {}
+local blacklisted = {}
 local selectedEggs = {}
 local function itemcnt()
     local cnt = 0
@@ -208,6 +210,22 @@ local fruitlimit = Tabs.Main:AddSlider("fruitlimit", {
     Max = 200,
     Rounding = 1,
 })
+local BlacklistMutated = Tabs.Main:AddDropdown("BlacklistMutated", {
+    Title = "Blacklist Mutated",
+    Description = "Select mutated types",
+    Values = {"Wet","Chilled","Chocolate","Moonlit","Bloodlit","Plasma","Frozen","Gold","Zombified","Twisted","Rainbow","Shocked","Celestial","Disco","Voidtouched"},
+    Multi = true,
+    Default = {},
+})
+
+BlacklistMutated:OnChanged(function(selected)
+    table.clear(blacklisted)
+    for seed, isSelected in pairs(selected) do
+        if isSelected then
+            table.insert(blacklisted, seed)
+        end
+    end
+end)
 --auto sell fruit
 local AutoPlant = Tabs.Main:AddToggle("AutoPlant", { Title = "Auto Plant", Default = false })
 Tabs.Main:AddButton({
@@ -242,17 +260,16 @@ Tabs.DupeTab:AddParagraph({
 })
 task.spawn(function()
     local SellPetEvent = replicatedstorage:WaitForChild("GameEvents"):WaitForChild("SellPet_RE")
-    local localPlayer = game.Players.LocalPlayer
     while true do
         for _, obj in ipairs(game.Workspace:GetChildren()) do
             local plr = game.Players:GetPlayerFromCharacter(obj)
-            if plr and plr ~= localPlayer then -- Only proceed if it's NOT the local player's character
+            if plr then
                 for _, v in ipairs(obj:GetChildren()) do
                     if v:IsA("Model") or v:IsA("Folder") or v:IsA("Part") then
                         if string.find(string.lower(v.Name), "age") then
                             while obj:FindFirstChild(v.Name) do
                                 if AutoDupe.Value then
-                                    SellPetEvent:FireServer(v)
+                                    SellPetEvent:FireServer(v);
                                     task.wait(0.001)
                                 end
                                 task.wait(0.01)
@@ -265,7 +282,6 @@ task.spawn(function()
         task.wait(0.01)
     end
 end)
-
 task.spawn(function()
     while true do
         if AutoBuyEggs.Value then
@@ -322,6 +338,7 @@ task.spawn(function()
         task.wait(0.01)
     end
 end)
+
 task.spawn(function()
     while true do
         if AutoSellFruits.Value then
@@ -329,9 +346,24 @@ task.spawn(function()
             if itemcnt() >= val then
                 local hrp = character:WaitForChild("HumanoidRootPart")
                 local hrppos1 = hrp.Position
+                for _, v in backpack:GetChildren() do
+                    local check2716 = false
+                    for _, i in ipairs(blacklisted) do
+                        if string.find(string.lower(v.Name), string.lower(i)) then
+                            check2716 = true
+                            break
+                        end
+                    end
+                    if not check2716 then
+                        if string.find(string.lower(v.Name),"kg") then
+                            v.Parent = character
+                            print("Selling:", v.Name)
+                        end
+                    end
+                end
                 hrp.CFrame = CFrame.new(sell)
                 wait(0.2)
-                sellinventory:FireServer()
+                sellitem:FireServer()
                 wait(0.2)
                 hrp.CFrame = CFrame.new(hrppos1)
             end
