@@ -53,12 +53,12 @@ local Window = Fluent:CreateWindow({
     MinimizeKey = Enum.KeyCode.LeftControl
 })
 local Tabs = {
-    Info = Window:AddTab({Title = " Info ", Icon = ""}),
-    Main = Window:AddTab({ Title = "Tab Farm", Icon = "" }),
+    Info = Window:AddTab({Title = "Info", Icon = ""}),
+    Main = Window:AddTab({Title = "Tab Farm", Icon = "" }),
+    Event = Window:AddTab({Title = "Event", Icon = "" }),
     DupeTab = Window:AddTab({ Title = "Dupe", Icon = "" }),
     Teleport = Window:AddTab({ Title = "Teleport", Icon = "" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "" }),
-
 }
 
 Tabs.Info:AddParagraph({
@@ -78,21 +78,14 @@ Tabs.Info:AddButton({
         })
     end
 })
---Tabs, Windows
+--Tabs, Windowsf
 local infjump = true
-game:GetService("UserInputService").JumpRequest:connect(function()
+game:GetService("UserInputService").JumpRequest:Connect(function()
 	if infjump then
 		game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
 	end
 end)
 --Inf Jump
-assert(firesignal, "Your exploit does not support firesignal.")
-local UserInputService: UserInputService = game:GetService("UserInputService")
-local RunService: RunService = game:GetService("RunService")
-UserInputService.WindowFocusReleased:Connect(function()
-   RunService.Stepped:Wait()
-   pcall(firesignal, UserInputService.WindowFocused)
-end)
 local vu = game:GetService("VirtualUser")
 Players.LocalPlayer.Idled:Connect(function()
     vu:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
@@ -260,6 +253,25 @@ Tabs.DupeTab:AddParagraph({
     Title = "How To Dupe",
     Content = "Equip a pet on another account in the same server"
 })
+local AutoEvent = Tabs.Event:AddToggle("AutoEvent", { Title = "Auto Event", Default = false })
+local checkevent = false
+task.spawn(function()
+    while true do
+        if AutoEvent.Value then
+            for _, v in backpack:GetChildren() do
+                if string.find(string.lower(v.Name), "pollinated") then
+                    checkevent = true
+                    v.Parent = character
+                end
+            end
+            if checkevent then
+                checkevent = false
+                game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("HoneyMachineService_RE"):FireServer("MachineInteract")
+            end
+        end
+        task.wait(2.5)
+    end
+end)
 task.spawn(function()
     while true do
         if AutoQuest.Value then
@@ -312,15 +324,18 @@ task.spawn(function()
     pcall(function()
         while true do
             for _, v in backpack:GetChildren() do
-                if string.find(string.lower(v.Name), "seed") then
-                    if v:IsA("Tool") and AutoPlant.Value then
-                        while checks2(v.Name) do
-                            v.Parent = character
-                            local start = string.find(string.lower(v.Name), "seed")
-                            local s = string.sub(v.Name, 1, start - 2)
-                            replicatedstorage:WaitForChild("GameEvents"):WaitForChild("Plant_RE"):FireServer(vector.create(hrppos.X, 0.13552704453468323, hrppos.Z),s)
-                            task.wait(0.1)
+                if v:IsA("Tool") and AutoPlant.Value and string.find(string.lower(v.Name), "seed") then
+                    while checks2(v.Name) do
+                        if v.Parent == backpack then
+                            local humanoid = character:FindFirstChildOfClass("Humanoid")
+                            if humanoid then
+                                humanoid:EquipTool(v)
+                            end
                         end
+                        local seedStart = string.find(string.lower(v.Name), "seed")
+                        local seedName = v.Name:sub(1, seedStart - 2):gsub("%s*$", "")
+                        replicatedstorage:WaitForChild("GameEvents"):WaitForChild("Plant_RE"):FireServer(vector.create(hrppos.X, 0.13552704453468323, hrppos.Z),seedName)
+                        task.wait(0.4)
                     end
                 end
             end
@@ -354,28 +369,35 @@ task.spawn(function()
         if AutoSellFruits.Value then
             local val = tonumber(fruitlimit.Value)
             if itemcnt() >= val then
-                local hrp = character:WaitForChild("HumanoidRootPart")
-                local hrppos1 = hrp.Position
-                for _, v in backpack:GetChildren() do
-                    local check2716 = false
-                    for _, i in ipairs(blacklisted) do
-                        if string.find(string.lower(v.Name), string.lower(i)) then
-                            check2716 = true
-                            break
+                if not checkevent then
+                    local hrp = character:WaitForChild("HumanoidRootPart")
+                    local hrppos1 = hrp.Position
+                    for _, u in character:GetChildren() do
+                        if u:IsA("Tool") then
+                            u.Parent = backpack
                         end
                     end
-                    if not check2716 then
-                        if string.find(string.lower(v.Name),"kg") then
-                            v.Parent = character
-                            task.wait(0.005)
+                    for _, v in backpack:GetChildren() do
+                        local check2716 = false
+                        for _, i in ipairs(blacklisted) do
+                            if string.find(string.lower(v.Name), string.lower(i)) then
+                                check2716 = true
+                                break
+                            end
+                        end
+                        if not check2716 then
+                            if string.find(v.Name,"kg") then
+                                v.Parent = character
+                                task.wait(0.001)
+                            end
                         end
                     end
+                    hrp.CFrame = CFrame.new(sell)
+                    wait(0.25)
+                    sellitem:FireServer()
+                    wait(0.25)
+                    hrp.CFrame = CFrame.new(hrppos1)
                 end
-                hrp.CFrame = CFrame.new(sell)
-                wait(0.2)
-                sellitem:FireServer()
-                wait(0.2)
-                hrp.CFrame = CFrame.new(hrppos1)
             end
         end
         task.wait(0.25)
