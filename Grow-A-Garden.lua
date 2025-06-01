@@ -235,6 +235,8 @@ Tabs.Main:AddButton({
         hrppos = character:WaitForChild("HumanoidRootPart").Position
     end
 })
+local AutoQuest = Tabs.Main:AddToggle("AutoQuest", { Title = "Auto Quest", Default = false })
+
 --plan point
 Tabs.Teleport:AddButton({
     Title = "Teleport To Gear Shop",
@@ -258,6 +260,14 @@ Tabs.DupeTab:AddParagraph({
     Title = "How To Dupe",
     Content = "Equip a pet on another account in the same server"
 })
+task.spawn(function()
+    while true do
+        if AutoQuest.Value then
+            game:GetService("ReplicatedStorage"):WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\002"))
+        end
+        task.wait(2.5)
+    end
+end)
 task.spawn(function()
     local SellPetEvent = replicatedstorage:WaitForChild("GameEvents"):WaitForChild("SellPet_RE")
     while true do
@@ -357,7 +367,7 @@ task.spawn(function()
                     if not check2716 then
                         if string.find(string.lower(v.Name),"kg") then
                             v.Parent = character
-                            print("Selling:", v.Name)
+                            task.wait(0.005)
                         end
                     end
                 end
