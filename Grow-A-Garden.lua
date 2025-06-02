@@ -6,6 +6,7 @@ local Players = game:GetService("Players")
 local GameEvents = replicatedstorage:WaitForChild("GameEvents")
 local BuySeedStock = GameEvents:WaitForChild("BuySeedStock")
 local BuyGearStock = GameEvents:WaitForChild("BuyGearStock")
+local BuyEventItems = GameEvents:WaitForChild("BuyEventShopStock")
 local sellinventory = GameEvents:WaitForChild("Sell_Inventory")
 local sellitem = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("Sell_Item")
 local backpack = game.Players.LocalPlayer.Backpack
@@ -113,6 +114,7 @@ local selectedSeeds = {}
 local selectedGears = {}
 local blacklisted = {}
 local selectedEggs = {}
+local selectedeventitems = {}
 local function itemcnt()
     local cnt = 0
     for _, item in ipairs(backpack:GetChildren()) do
@@ -254,8 +256,35 @@ Tabs.DupeTab:AddParagraph({
     Content = "Equip a pet on another account in the same server"
 })
 local AutoEvent = Tabs.Event:AddToggle("AutoEvent", { Title = "Auto Give Honey", Default = false })
+local AutoBuyEventItems = Tabs.Event:AddToggle("AutoBuyEventItems", { Title = "Auto Buy Event Items", Default = false })
+local EventShopList = Tabs.Event:AddDropdown("EventShopList", {
+    Title = "Event Item List",
+    Description = "Select event items.",
+    Values = {"Flower Seed Pack","Nectarine","Hive Fruit","Honey Sprinkler","Bee Egg","Bee Crate","Honey Comb","Bee Chair","Honey Torch","Honey Walkway"},
+    Multi = true,
+    Default = {},
+})
+
+EventShopList:OnChanged(function(selected)
+    table.clear(selectedeventitems)
+    for eventitems, isSelected in pairs(selected) do
+        if isSelected then
+            table.insert(selectedeventitems, eventitems)
+        end
+    end
+end)
 local checkevent = false
 local issell = false
+task.spawn(function()
+    while true do
+        if AutoBuyEventItems.Value then
+            for _, eventitems in ipairs(selectedeventitems) do
+                BuyEventItems:FireServer(eventitems)
+            end
+        end
+        task.wait(0.25)
+    end
+end)
 task.spawn(function()
     while true do
         if AutoEvent.Value then
