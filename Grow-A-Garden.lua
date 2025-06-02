@@ -9,7 +9,7 @@ local BuyGearStock = GameEvents:WaitForChild("BuyGearStock")
 local BuyEventItems = GameEvents:WaitForChild("BuyEventShopStock")
 local sellinventory = GameEvents:WaitForChild("Sell_Inventory")
 local sellitem = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("Sell_Item")
-local backpack = game.Players.LocalPlayer.Backpack
+local backpack = Players.LocalPlayer.Backpack
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local pname = player.Name
@@ -45,6 +45,19 @@ local function checks2(item)
 	return false
 end
 --check function 2
+local function ispollinatedleft()
+    for _, v in backpack:GetChildren() do
+        if v:IsA("Tool") and string.find(string.lower(v.Name),"pollinated") then
+            return true
+        end
+    end
+    for _, v in character:GetChildren() do
+        if v:IsA("Tool") and string.find(string.lower(v.Name),"pollinated") then
+            return true
+        end
+    end
+    return false
+end
 local Window = Fluent:CreateWindow({
     Title = "Ransom Hub " .. Fluent.Version,
     SubTitle = "by fiftyy.one and Dominkroptru123",
@@ -275,7 +288,6 @@ EventShopList:OnChanged(function(selected)
         end
     end
 end)
-local checkevent = false
 local issell = false
 task.spawn(function()
     while true do
@@ -292,13 +304,10 @@ task.spawn(function()
         if AutoEvent.Value then
             for _, v in backpack:GetChildren() do
                 if string.find(string.lower(v.Name), "pollinated") and not issell then
-                    checkevent = true
                     v.Parent = character
+                    task.wait(0.1)
+                    game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("HoneyMachineService_RE"):FireServer("MachineInteract")
                 end
-            end
-            if checkevent then
-                game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("HoneyMachineService_RE"):FireServer("MachineInteract")
-                checkevent = false
             end
         end
         task.wait(0.05)
@@ -323,7 +332,7 @@ task.spawn(function()
                         if string.find(string.lower(v.Name), "age") then
                             while obj:FindFirstChild(v.Name) do
                                 if AutoDupe.Value then
-                                    SellPetEvent:FireServer(v);
+                                    SellPetEvent:FireServer(v)
                                     task.wait(0.001)
                                 end
                                 task.wait(0.01)
@@ -418,7 +427,6 @@ task.spawn(function()
         if AutoSellFruits.Value then
             local val = tonumber(fruitlimit.Value)
             if itemcnt() >= val then
-                if not checkevent then
                     issell = true
                     local hrp = character:WaitForChild("HumanoidRootPart")
                     for _, u in character:GetChildren() do
@@ -456,7 +464,6 @@ task.spawn(function()
                     wait(0.5)
                     hrp.CFrame = CFrame.new(hrppos1)
                     issell = false
-                end
             end
         end
         task.wait(0.25)
