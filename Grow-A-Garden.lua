@@ -55,7 +55,7 @@ local Window = Fluent:CreateWindow({
 local Tabs = {
     Info = Window:AddTab({Title = "Info", Icon = ""}),
     Main = Window:AddTab({Title = "Tab Farm", Icon = "" }),
-    Event = Window:AddTab({Title = "Honey Event", Icon = "" }),
+    Event = Window:AddTab({Title = "Event", Icon = "" }),
     DupeTab = Window:AddTab({ Title = "Dupe", Icon = "" }),
     Teleport = Window:AddTab({ Title = "Teleport", Icon = "" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "" }),
@@ -255,6 +255,7 @@ Tabs.DupeTab:AddParagraph({
 })
 local AutoEvent = Tabs.Event:AddToggle("AutoEvent", { Title = "Auto Event", Default = false })
 local checkevent = false
+local issell = false
 task.spawn(function()
     while true do
         if AutoEvent.Value then
@@ -265,9 +266,10 @@ task.spawn(function()
                 end
             end
             if checkevent then
-                print("lannayduocvevietnamchangdamquacampuchialanhai")
-                game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("HoneyMachineService_RE"):FireServer("MachineInteract")
-                checkevent = false
+                if not issell then
+                    game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("HoneyMachineService_RE"):FireServer("MachineInteract")
+                    checkevent = false
+                end
             end
         end
         task.wait(0.05)
@@ -373,8 +375,8 @@ task.spawn(function()
             local val = tonumber(fruitlimit.Value)
             if itemcnt() >= val then
                 if not checkevent then
+                    issell = true
                     local hrp = character:WaitForChild("HumanoidRootPart")
-                    local hrppos1 = hrp.Position
                     for _, u in character:GetChildren() do
                         if u:IsA("Tool") then
                             u.Parent = backpack
@@ -403,11 +405,13 @@ task.spawn(function()
                             end
                         end
                     end
+                    local hrppos1 = hrp.Position
                     hrp.CFrame = CFrame.new(sell)
                     wait(0.25)
                     sellitem:FireServer()
                     wait(0.25)
                     hrp.CFrame = CFrame.new(hrppos1)
+                    issell = false
                 end
             end
         end
