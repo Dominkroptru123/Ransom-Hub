@@ -85,10 +85,10 @@ Tabs.Info:AddButton({
     Title = "Discord link",
     Description = "Click to copy Discord link",
     Callback = function()
-        setclipboard("https://discord.gg/3RdzPAHm")
+        setclipboard("https://discord.gg/vZFFmeJp")
         game.StarterGui:SetCore("SendNotification", {
             Title = "Discord Link",
-            Text = "https://discord.gg/3RdzPAHm",
+            Text = "https://discord.gg/vZFFmeJp",
             Duration = 5
         })
     end
