@@ -265,12 +265,12 @@ Tabs.Teleport:AddButton({
     end
 })
 --teleport thingy
-local AutoDupe = Tabs.DupeTab:AddToggle("AutoDupe", { Title = "Auto Dupe", Default = false })
+local AutoDupe = Tabs.DupeTab:AddToggle("AutoDupe", { Title = "Auto Dupe [PATCHED]", Default = false })
 Tabs.DupeTab:AddParagraph({
     Title = "How To Dupe",
     Content = "Equip a pet on another account in the same server"
 })
-local AutoEvent = Tabs.Event:AddToggle("AutoEvent", { Title = "Auto Give Honey", Default = false })
+local AutoEvent = Tabs.Event:AddToggle("AutoEvent", { Title = "Auto Farm Honey", Default = false })
 local AutoBuyEventItems = Tabs.Event:AddToggle("AutoBuyEventItems", { Title = "Auto Buy Event Items", Default = false })
 local EventShopList = Tabs.Event:AddDropdown("EventShopList", {
     Title = "Event Item List",
@@ -306,7 +306,10 @@ task.spawn(function()
                 if string.find(string.lower(v.Name), "pollinated") and not issell then
                     v.Parent = character
                     task.wait(0.1)
-                    game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("HoneyMachineService_RE"):FireServer("MachineInteract")
+                    while checks2(v.Name) do
+                        game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("HoneyMachineService_RE"):FireServer("MachineInteract")
+                        task.wait(0.1)
+                    end
                 end
             end
         end
