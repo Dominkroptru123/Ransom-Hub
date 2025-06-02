@@ -451,9 +451,9 @@ task.spawn(function()
                     end
                     local hrppos1 = hrp.Position
                     hrp.CFrame = CFrame.new(sell)
-                    wait(0.25)
+                    wait(0.5)
                     sellitem:FireServer()
-                    wait(0.25)
+                    wait(0.5)
                     hrp.CFrame = CFrame.new(hrppos1)
                     issell = false
                 end
