@@ -85,10 +85,10 @@ Tabs.Info:AddButton({
     Title = "Discord link",
     Description = "Click to copy Discord link",
     Callback = function()
-        setclipboard("https://discord.gg/vZFFmeJp")
+        setclipboard("https://discord.gg/3RdzPAHm")
         game.StarterGui:SetCore("SendNotification", {
             Title = "Discord Link",
-            Text = "https://discord.gg/vZFFmeJp",
+            Text = "https://discord.gg/3RdzPAHm",
             Duration = 5
         })
     end
@@ -307,7 +307,10 @@ task.spawn(function()
                     v.Parent = character
                     task.wait(0.1)
                     while checks2(v.Name) do
-                        game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("HoneyMachineService_RE"):FireServer("MachineInteract")
+                        if not issell then
+                            v.Parent = character
+                            game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("HoneyMachineService_RE"):FireServer("MachineInteract")
+                        end
                         task.wait(0.1)
                     end
                 end
