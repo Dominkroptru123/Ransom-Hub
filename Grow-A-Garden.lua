@@ -45,7 +45,7 @@ end
 --check function 2
 local Window = Fluent:CreateWindow({
     Title = "Ransom Hub " .. Fluent.Version,
-    SubTitle = "by 51 aka fiftyone",
+    SubTitle = "by fiftyy.one and Dominkroptru123",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,
@@ -70,10 +70,10 @@ Tabs.Info:AddButton({
     Title = "Discord link",
     Description = "Click to copy Discord link",
     Callback = function()
-        setclipboard("https://discord.gg/zY276Cj7tn")
+        setclipboard("https://discord.gg/3RdzPAHm")
         game.StarterGui:SetCore("SendNotification", {
             Title = "Discord Link",
-            Text = "https://discord.gg/zY276Cj7tn",
+            Text = "https://discord.gg/3RdzPAHm",
             Duration = 5
         })
     end
