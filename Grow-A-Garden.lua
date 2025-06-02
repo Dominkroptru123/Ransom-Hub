@@ -14,6 +14,7 @@ local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local pname = player.Name
 local hrppos = character:WaitForChild("HumanoidRootPart").Position
+local isplanted = false
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -228,6 +229,7 @@ Tabs.Main:AddButton({
     Description = "Set yout plant location for auto plant",
     Callback = function()
         hrppos = character:WaitForChild("HumanoidRootPart").Position
+        isplanted = true
     end
 })
 local AutoQuest = Tabs.Main:AddToggle("AutoQuest", { Title = "Auto Quest", Default = false })
@@ -361,20 +363,23 @@ task.spawn(function()
                     local humanoid = character:FindFirstChildOfClass("Humanoid")
                     if v.Parent == backpack then
                         if humanoid then
-                            pcall(function()
-                                humanoid:EquipTool(v)
-                            end)
+                            if isplanted then
+                                pcall(function()
+                                    humanoid:EquipTool(v)
+                                end)
+                            end
                         end
                     end
                     local seedStart = string.find(string.lower(v.Name), "seed")
                     local seedName = v.Name:sub(1, seedStart - 2):gsub("%s*$", "")
-
                     if v.Parent == character then
                         replicatedstorage:WaitForChild("GameEvents"):WaitForChild("Plant_RE"):FireServer(vector.create(hrppos.X, 0.13552704453468323, hrppos.Z),seedName)
                     else
-                        pcall(function()
-                            humanoid:EquipTool(v)
-                        end)
+                        if isplanted then
+                            pcall(function()
+                                humanoid:EquipTool(v)
+                            end)
+                        end
                         replicatedstorage:WaitForChild("GameEvents"):WaitForChild("Plant_RE"):FireServer(vector.create(hrppos.X, 0.13552704453468323, hrppos.Z),seedName)
                     end
                     task.wait(0.1)
