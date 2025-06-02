@@ -260,16 +260,14 @@ task.spawn(function()
     while true do
         if AutoEvent.Value then
             for _, v in backpack:GetChildren() do
-                if string.find(string.lower(v.Name), "pollinated") then
+                if string.find(string.lower(v.Name), "pollinated") and not issell then
                     checkevent = true
                     v.Parent = character
                 end
             end
             if checkevent then
-                if not issell then
-                    game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("HoneyMachineService_RE"):FireServer("MachineInteract")
-                    checkevent = false
-                end
+                game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("HoneyMachineService_RE"):FireServer("MachineInteract")
+                checkevent = false
             end
         end
         task.wait(0.05)
@@ -413,7 +411,7 @@ task.spawn(function()
                                 if not check2717 then
                                     v.Parent = character
                                 end
-                                task.wait(0.001)
+                                task.wait(0.01)
                             end
                         end
                     end
