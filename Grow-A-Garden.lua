@@ -253,7 +253,7 @@ Tabs.DupeTab:AddParagraph({
     Title = "How To Dupe",
     Content = "Equip a pet on another account in the same server"
 })
-local AutoEvent = Tabs.Event:AddToggle("AutoEvent", { Title = "Auto Event", Default = false })
+local AutoEvent = Tabs.Event:AddToggle("AutoEvent", { Title = "Auto Give Honey", Default = false })
 local checkevent = false
 local issell = false
 task.spawn(function()
@@ -324,28 +324,40 @@ task.spawn(function()
     end
 end)
 task.spawn(function()
-    pcall(function()
-        while true do
-            for _, v in backpack:GetChildren() do
-                if v:IsA("Tool") and AutoPlant.Value and string.find(string.lower(v.Name), "seed") then
-                    while checks2(v.Name) do
-                        if v.Parent == backpack then
-                            local humanoid = character:FindFirstChildOfClass("Humanoid")
-                            if humanoid then
-                                humanoid:EquipTool(v)
-                            end
-                        end
-                        local seedStart = string.find(string.lower(v.Name), "seed")
-                        local seedName = v.Name:sub(1, seedStart - 2):gsub("%s*$", "")
-                        replicatedstorage:WaitForChild("GameEvents"):WaitForChild("Plant_RE"):FireServer(vector.create(hrppos.X, 0.13552704453468323, hrppos.Z),seedName)
-                        task.wait(0.4)
+    while true do
+        for _, v in backpack:GetChildren() do
+            if v:IsA("Tool") and AutoPlant.Value and string.find(string.lower(v.Name), "seed") then
+                while checks2(v.Name) do
+                    if not v or not v.Parent or v.Parent == nil or v.Parent == game then
+                        break
                     end
+                    local humanoid = character:FindFirstChildOfClass("Humanoid")
+                    if v.Parent == backpack then
+                        if humanoid then
+                            pcall(function()
+                                humanoid:EquipTool(v)
+                            end)
+                        end
+                    end
+                    local seedStart = string.find(string.lower(v.Name), "seed")
+                    local seedName = v.Name:sub(1, seedStart - 2):gsub("%s*$", "")
+
+                    if v.Parent == character then
+                        replicatedstorage:WaitForChild("GameEvents"):WaitForChild("Plant_RE"):FireServer(vector.create(hrppos.X, 0.13552704453468323, hrppos.Z),seedName)
+                    else
+                        pcall(function()
+                            humanoid:EquipTool(v)
+                        end)
+                        replicatedstorage:WaitForChild("GameEvents"):WaitForChild("Plant_RE"):FireServer(vector.create(hrppos.X, 0.13552704453468323, hrppos.Z),seedName)
+                    end
+                    task.wait(0.1)
                 end
             end
-            task.wait(0.1)
         end
-    end)
+        task.wait(0.1)
+    end
 end)
+
 
 task.spawn(function()
     while true do
