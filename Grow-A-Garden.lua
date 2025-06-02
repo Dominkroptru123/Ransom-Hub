@@ -55,7 +55,7 @@ local Window = Fluent:CreateWindow({
 local Tabs = {
     Info = Window:AddTab({Title = "Info", Icon = ""}),
     Main = Window:AddTab({Title = "Tab Farm", Icon = "" }),
-    Event = Window:AddTab({Title = "Event", Icon = "" }),
+    Event = Window:AddTab({Title = "Honey Event", Icon = "" }),
     DupeTab = Window:AddTab({ Title = "Dupe", Icon = "" }),
     Teleport = Window:AddTab({ Title = "Teleport", Icon = "" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "" }),
