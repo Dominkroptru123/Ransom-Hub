@@ -18,8 +18,6 @@ local isplanted = false
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
-local onetimefruits = {"Carrot", "Daffodil", "Orange Tulip", "Watermelon", "Pumpkin", "Bamboo", "Mushroom"}
-local fruitlist = {"Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato", "Corn","Daffodil", "Watermelon", "Pumpkin", "Apple", "Bamboo", "Coconut","Cactus", "Dragon Fruit", "Mango", "Grape", "Mushroom", "Pepper","Cacao", "Beanstalk"}
 --variables
 local function checks(a, b)
     for _, v in ipairs(b) do
@@ -409,18 +407,20 @@ end)
 task.spawn(function()
     while true do
         for _ ,v in plant:GetChildren() do
-            if checks(v.Name,onetimefruits) then
-                if AutoHarvest.Value then
+            if v:FindFirstChild("Fruits") then
+                if #v.Fruits:GetChildren() == 0 then
                     replicatedstorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ v })
-                end
-            else
-                if v:FindFirstChild("Fruits") then 
+                else
                     for _, i in v.Fruits:GetChildren() do
                         if AutoHarvest.Value then
                             replicatedstorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ i })
                         end
-                        task.wait(0.01)
+                        task.wait(0.001)
                     end
+                end
+            else
+                if AutoHarvest.Value then
+                    replicatedstorage:WaitForChild("ByteNetReliable"):FireServer(buffer.fromstring("\001\001\000\001"),{ v })
                 end
             end
         end
